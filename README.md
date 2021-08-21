@@ -1,7 +1,7 @@
 # Welcome to Excav8r!
 ![enter image description here](https://i.imgur.com/LeOgrQ0.png)
 
-Excav8r is a Python library (inspired by an episode of Silicon Valley) that allows developers to download and/or utilize datasets of up over a thousand images with just a few lines of code. It with the intention for use by AI developers who need access to large photosets quickly.
+Excav8r is an open-source Python library (inspired by an episode of Silicon Valley) that allows developers to download and/or utilize datasets of over a thousand images with just a few lines of code. It with the intention for use by AI developers who need access to large photosets quickly.
 
 
 # Details
