@@ -33,9 +33,6 @@ As of now Excav8r has 3 functions types:
 
  -  **getAll()** - Scrapes all supported search engines for images
  ```python
- #destination argument determines the path the images will be downloaded to
- #timeout argument controls the number of seconds that will be used scraping and returning the images
- #max argument controls the maximum # of photos to be returned 
 def getDuckDuckGo(search_term, destination='excav8r', timeout=300, max=1000, as_list=False)
 ```
 - **getGoogle()** & **getDuckDuckGo()** - Scrapes images from respective search engines
