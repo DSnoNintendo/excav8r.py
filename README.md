@@ -3,6 +3,22 @@
 
 Excav8r is an open-source Python library (inspired by an episode of Silicon Valley) that allows developers to download and/or utilize datasets of over a thousand images with just a few lines of code. It with the intention for use by AI developers who need access to large photosets quickly.
 
+ ```python
+# Will save a maximum of 500 images from DuckDuckGo with search term "single orange png"  
+scraper.getDuckDuckGo("single orange png", max=500)  
+  
+# Will save images from both DuckDuckGo and Google with keyword "hot dog"  
+# to a folder called ScrapedImages in the working directory  
+# The function will return all images downloaded in a 30 second timeframe  
+scraper.getAll("hot dog png", destination="ScrapedImages", timeout=30)  
+  
+#Will return a list of up to 20 PIL Image objects from Google Images with keyword "chihuahua"  
+#timeout argument is null if as_list is True  
+images = scraper.getGoogle("chihuahua", as_list=True, max=20)  
+  
+#Make sure to close the browser when it is no longer being used  
+scraper.closeBrowser()
+```
 
 # Details
 
@@ -48,20 +64,3 @@ def getDuckDuckGo(search_term, destination='excav8r', timeout=300, max=1000, as_
  - **max** - The maximum # of photos that will be returned *(1000 by default)*
  - **as_list** - If true, a list of PIL Image objects will be returned instead of images being downloaded. When true, *timeout* argument is ignored. *(False by default)*
 
-## Examples
- ```python
-# Will save a maximum of 500 images from DuckDuckGo with search term "single orange png"  
-scraper.getDuckDuckGo("single orange png", max=500)  
-  
-# Will save images from both DuckDuckGo and Google with keyword "hot dog"  
-# to a folder called ScrapedImages in the working directory  
-# The function will return all images downloaded in a 30 second timeframe  
-scraper.getAll("hot dog png", destination="ScrapedImages", timeout=30)  
-  
-#Will return a list of up to 20 PIL Image objects from Google Images with keyword "chihuahua"  
-#timeout argument is null if as_list is True  
-images = scraper.getGoogle("chihuahua", as_list=True, max=20)  
-  
-#Make sure to close the browser when it is no longer being used  
-scraper.closeBrowser()
-```
