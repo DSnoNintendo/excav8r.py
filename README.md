@@ -4,6 +4,9 @@
 Excav8r is an open-source Python library (inspired by an episode of Silicon Valley) that allows developers to download and/or utilize datasets of over a thousand images with just a few lines of code. It with the intention for use by AI developers who need access to large photosets quickly.
 
  ```python
+ import excav8r
+scraper = excav8r.Excva8r()
+
 # Will save a maximum of 500 images from DuckDuckGo with search term "single orange png"  
 scraper.getDuckDuckGo("single orange png", max=500)  
   
