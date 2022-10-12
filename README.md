@@ -13,7 +13,7 @@ scraper.getDuckDuckGo("single orange png", max=500)
 # Will save images from both DuckDuckGo and Google with keyword "hot dog"  
 # to a folder called ScrapedImages in the working directory  
 # The function will return all images downloaded in a 30 second timeframe  
-scraper.getAll("hot dog png", destination="ScrapedImages", timeout=30)  
+scraper.getAll("hot dog png", destination="ScrapedImages/", timeout=30)  
   
 #Will return a list of up to 20 PIL Image objects from Google Images with keyword "chihuahua"  
 #timeout argument is null if as_list is True  
@@ -52,11 +52,11 @@ As of now Excav8r has 3 functions types:
 
  -  **getAll()** - Scrapes all supported search engines for images
  ```python
-def getDuckDuckGo(search_term, destination='excav8r', timeout=300, max=1000, as_list=False)
+def getDuckDuckGo(search_term, destination='excav8r/', timeout=300, max=1000, as_list=False)
 ```
 - **getGoogle()** & **getDuckDuckGo()** - Scrapes images from respective search engines
  ```python
-def getDuckDuckGo(search_term, destination='excav8r', timeout=300, max=1000, as_list=False)
+def getDuckDuckGo(search_term, destination='excav8r/', timeout=300, max=1000, as_list=False)
 ```
 
 ## Understanding the functions' arguments 

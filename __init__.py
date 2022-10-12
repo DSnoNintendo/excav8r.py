@@ -1,5 +1,7 @@
 import mimetypes
 import os
+import sys
+from threading import Thread
 
 from selenium import webdriver
 from webdriver_manager.chrome import ChromeDriverManager
@@ -13,8 +15,11 @@ import requests
 from requests.exceptions import InvalidSchema
 from time import time
 from PIL import Image
+import argparse
 
 import shutil
+
+NUM_THREADS = 4
 
 
 class Excva8r:
@@ -26,6 +31,7 @@ class Excva8r:
             browser_options.add_argument('--disable-dev-shm-usage')
             browser_options.add_argument('--no-sandbox')
             self.driver = webdriver.Chrome(ChromeDriverManager().install(), options=browser_options)
+            print("Browser is ready")
             self.browserOpen = True
         except ValueError:  # if chrome not available, try firefox
             # try to open FirefoxDriver
@@ -43,7 +49,7 @@ class Excva8r:
         self.counter = 0
         self.start = None
 
-    def getAll(self, search_term, destination='excav8r', timeout=300, max=500, as_list=False):
+    def getAll(self, search_term, destination='excav8r/', timeout=300, max=500, as_list=False):
         if as_list:
             img_links = []
             img_links.extend(self.__getDdgElements(search_term))
@@ -82,7 +88,7 @@ class Excva8r:
 
         return
 
-    def getDuckDuckGo(self, search_term, destination='excav8r', timeout=300, max=1000, as_list=False):
+    def getDuckDuckGo(self, search_term, destination='excav8r/', timeout=300, max=1000, as_list=False):
         if as_list:
             img_links = []
             img_links.extend(self.__getDdgElements(search_term))
@@ -104,6 +110,13 @@ class Excva8r:
 
         img_links.extend(self.__getDdgElements(search_term))
 
+        for l in self.__divide_list(img_links, NUM_THREADS):
+            threads = []
+            t = Thread(target=self.__save_list, args=(l, self.start))
+            threads.append(t)
+
+        self.__run_threads(threads)
+
         for link in img_links:
             if max == 0: break
             print(time() - self.start)
@@ -118,7 +131,7 @@ class Excva8r:
 
         return self.counter
 
-    def getGoogle(self, search_term, destination='excav8r', timeout=300, max=1000, as_list = False):
+    def getGoogle(self, search_term, destination='excav8r/', timeout=300, max=1000, as_list = False):
         if as_list:
             img_links = []
             img_links.extend(self.__getGoogleElements(search_term))
@@ -180,6 +193,24 @@ class Excva8r:
                 self.driver = webdriver.Firefox(GeckoDriverManager().install(), options=browser_options)
         else:
             print("Browser already open")
+
+    def __save_list(self, l, t):
+        for link in l:
+            if self.max == 0: break
+            print(time() - self.start)
+            if time() - self.start > self.timeout:
+                print("timeout reached")
+                print("%s images found with keyword: %s" % (self.counter, self.search_term))
+                return
+            self.__save(link)
+            self.max -= 1
+
+
+    def __run_threads(self, threads):
+        for x in threads:
+            x.start()
+        for x in threads:
+            x.join()
 
     def __getDdgElements(self, search_term):
         print("Scraping DuckDuckGo")
@@ -244,18 +275,19 @@ class Excva8r:
         print(img_url)
         try:
             if 'jpeg' in img_url:
-                urllib.request.urlretrieve(img_url, '%s/%s%s.jpg' % (self.destination, self.search_term, self.counter))
+                urllib.request.urlretrieve(img_url, '%s%s%s.jpg' % (self.destination, self.search_term, self.counter))
                 self.counter += 1
             else:
                 response = requests.get(img_url)
                 content_type = response.headers['content-type']
                 ext = mimetypes.guess_extension(content_type)
-                file = open('%s/%s%s%s' % (self.destination, self.search_term, self.counter, ext), "wb")
+                file = open('%s%s%s%s' % (self.destination, self.search_term.replace(' ', '_'), self.counter, ext), "wb")
                 file.write(response.content)
                 file.close()
                 self.counter += 1
         except InvalidSchema as e:
             pass
+
 
     def __scroll(self):
         self.driver.execute_script('window.scrollTo(0, document.body.scrollHeight)')
@@ -298,3 +330,9 @@ class Excva8r:
             return False
         except Exception as e:
             return False
+
+    def __divide_list(self, l, n):
+
+        # looping till length l
+        for i in range(0, len(l), n):
+            yield l[i:i + n]
